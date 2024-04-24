@@ -1,0 +1,11 @@
+jsonpickle
+demjson3
+requests
+furl
+geojson
+jsonpatch
+python-dateutil
+testcontainers
+sqlalchemy
+psycopg2
+numpy
