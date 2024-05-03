@@ -27,6 +27,7 @@ from secd_staplus_client.model.campaign import Campaign
 from secd_staplus_client.model.relation import Relation
 from secd_staplus_client.model.observation_group import ObservationGroup
 from secd_staplus_client.model.observation import Observation
+from secd_staplus_client.model.feature_of_interest import FeatureOfInterest
 
 from secd_staplus_client.service.staplusservice import STAplusService
 from secd_staplus_client.model.ext.entity_type import EntityTypes
@@ -35,7 +36,6 @@ from secd_staplus_client.utils import transform_json_to_entity_list
 from frost_sta_client.model.sensor import Sensor
 from frost_sta_client.model.observedproperty import ObservedProperty
 from frost_sta_client.model.ext.unitofmeasurement import UnitOfMeasurement
-from frost_sta_client.model.feature_of_interest import FeatureOfInterest
 from frost_sta_client.model.location import Location
 from frost_sta_client.model.historical_location import HistoricalLocation
 

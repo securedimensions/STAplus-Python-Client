@@ -29,7 +29,7 @@ EntityTypes = {
     'FeatureOfInterest': {
         'singular': 'FeatureOfInterest',
         'plural': 'FeaturesOfInterest',
-        'class': 'frost_sta_client.model.feature_of_interest.FeatureOfInterest',
+        'class': 'secd_staplus_client.model.feature_of_interest.FeatureOfInterest',
         'relations_list': ['Observations']
     },
     'HistoricalLocation': {
