@@ -47,3 +47,7 @@ def transform_json_to_entity(json_response, entity_class):
     obj = cl()
     obj.__setstate__(json_response)
     return obj
+
+def transform_entity_to_json_dict(entity):
+    json_str = jsonpickle.encode(entity, unpicklable=False)
+    return jsonpickle.decode(json_str)
