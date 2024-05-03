@@ -1,11 +1,15 @@
 # OGC STAplus (Sensorthings) API Python Client
 
-This STAplus Python Client is an extension to the [FROST API Python Client](https://github.com/FraunhoferIOSB/FROST-Python-Client). This implementation is a python package for the [STAplus](https://github.com/opengeospatial/sensorthings/tree/22-022) API and aims to simplify development of STAplus and SensorThings enabled client applications.
+This STAplus Python Client is an extension to the [FROST API Python Client](https://github.com/FraunhoferIOSB/FROST-Python-Client) implementing the [STAplus](https://docs.ogc.org/is/22-022r1/22-022r1.html) API. The aim is to simplify development of STAplus and SensorThings enabled client applications.
+
+## Python Version
+This library requires Python 3.11 to better support parsing ISO datetime values (`datetime.datetime.fromisoformat`). See [here](https://docs.python.org/3/library/datetime.html#datetime.datetime.fromisoformat) for more information.
 
 ## Features
 * Support for all STAplus and SensorThings entity types
 * CRUD operations
 * Queries on entity lists
+* Query on single entity
 * MultiDatastreams
 
 ## API
@@ -13,14 +17,27 @@ This STAplus Python Client is an extension to the [FROST API Python Client](http
 The `STAplusService` class is central to the library. An instance of it represents a STAplus service and is identified by a URI.
 
 
-### CRUD operations
-The source code below demonstrates the CRUD operations for Thing objects. Operations for other entities work similarly.
+### Creating Entities via the STAplus Client
+The source code below demonstrates how to initialize the client for a STAplus endpoint on `url`. 
+
 ```python
 import secd_staplus_client as staplus
 
 url = "<your domain>/staplus/v1.1"
 service = staplus.STAplusService(url)
 ```
+
+#### Configuring an Authentication Handler
+When interacting with a STAplus service that has enabled authentication, the use of an `AuthHandler` is required.
+
+```python
+import secd_staplus_client as staplus
+
+url = "<your domain>/staplus/v1.1"
+auth_handler.AuthHandler(...)
+service = staPlus.STAplusService(url, auth_handler=auth)
+```
+
 #### Creating a Party Entity
 The `Party` entity represents a user or an institution. When interacting with a STAplus service that has enabled authentication, the `Party` entity represents the acting user and access control controls Create, Update and Delete.
 ```python
@@ -109,8 +126,8 @@ observation.datastream = service.datastreams().find(<the datastream id created p
 service.create(observation)
 ```
 
-#### Creating a Group Entity
-A `Group` entity can be used as a container of observations that belong together.
+#### Creating an ObservationGroup Entity
+A `ObservationGroup` entity can be used as a container of observations that belong together.
 
 ```python
 import secd_staplus_client as staplus
@@ -133,3 +150,40 @@ service.create(group)
 
 #### Creating SensorThings Entities
 How to use this implementation on SensorThings Entity Types, please see the [FROST-Python-Client](https://github.com/securedimensions/STAplus-Python-Client) documentation.
+
+### Fetching Entities via the STAplus Client
+This implementation supports the fetching of `EntityList` and `Entity`.
+
+#### Fetching an EntityList
+An `EntityList` is the result from fetching entities that have a multiplicity `0..*` or `1..*`. To fetch the list of entities, you need to use the `.list()` function. The following example fetches all datastreams:
+
+```python
+import secd_staplus_client as staplus
+
+url = "<your domain>/staplus/v1.1"
+service = staplus.STAplusService(url)
+datastreams = service.datastreams().query().list()
+```
+
+In order to get all entities of a given entity, you can use the function `get_<entity_plural>()`. For example, to fetch all datastreams of a given `Thing` please use the following code: 
+
+```python
+import secd_staplus_client as staplus
+
+url = "<your domain>/staplus/v1.1"
+service = staplus.STAplusService(url)
+thing = service.things().find(1)
+thing_datastreams = thing.get_datastreams().query().list()
+```
+
+#### Fetching an Entity
+An `Entity` is the result from fetching an entity that has multiplicity `0..1` or `1`. To fetch one single entity you need to use the `.item()` function. The following example fetches the thing associated to a datastream:
+
+```python
+import secd_staplus_client as staplus
+
+url = "<your domain>/staplus/v1.1"
+service = staplus.STAplusService(url)
+datastream = service.datastreams().find(1).item()
+datastream_thing = datastream.get_thing().query().item()
+```
