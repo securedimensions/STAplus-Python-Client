@@ -102,8 +102,6 @@ class BaseDao:
         logging.debug('Posting to ' + str(url.url))
         json_dict = frost_sta_client.utils.transform_entity_to_json_dict(entity)
         # Andreas Matheus bugfix
-        if 'location' in json_dict:
-            json_dict['location'] = entity.location
         if 'feature' in json_dict:
             json_dict['feature'] = entity.feature
         try:

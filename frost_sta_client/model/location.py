@@ -212,12 +212,12 @@ class Location(entity.Entity):
             data['description'] = self.description
         if self.encoding_type is not None and self.encoding_type != '':
             data['encodingType'] = self.encoding_type
-        if self.properties is not None and self.properties != {}:
+        if self.properties != {}:
             data['properties'] = self.properties
         if self.location is not None:
-            data['location'] = self.location
+            data['location'] = json.loads(geojson.dumps(self.location))
         if self.things is not None:
-            data['Things'] = self.things
+            data['Things'] = self.things.__getstate__()
         if self.historical_locations is not None and len(self.historical_locations.entities) > 0:
             data['HistoricalLocation'] = self.historical_locations.__getstate__()
         return data
