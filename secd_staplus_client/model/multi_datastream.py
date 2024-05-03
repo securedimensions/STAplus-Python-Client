@@ -173,3 +173,8 @@ class MultiDatastream(multi_datastream.MultiDatastream):
 
     def get_dao(self, service):
         return MultiDatastreamDao(service)
+
+    def clone(self):
+        entity = self.__class__()
+        entity.id = self.id
+        return entity

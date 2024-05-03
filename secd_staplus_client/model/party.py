@@ -308,3 +308,8 @@ class Party(entity.Entity):
 
     def get_dao(self, service):
         return PartyDao(service)
+
+    def clone(self):
+        entity = self.__class__()
+        entity.id = self.id
+        return entity

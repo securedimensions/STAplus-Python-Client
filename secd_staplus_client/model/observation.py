@@ -210,9 +210,23 @@ class Observation(observation.Observation):
     def get_dao(self, service):
         return ObservationDao(service)
 
+    def clone(self):
+        entity = self.__class__()
+        entity.id = self.id
+        return entity
 class Object(Observation):
     def get_dao(self, service):
         return ObjectDao(service)
+
+    def clone(self):
+        entity = self.__class__()
+        entity.id = self.id
+        return entity
 class Subject(Observation):
     def get_dao(self, service):
         return SubjectDao(service)
+
+    def clone(self):
+        entity = self.__class__()
+        entity.id = self.id
+        return entity

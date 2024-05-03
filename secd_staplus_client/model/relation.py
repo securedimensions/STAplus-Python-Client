@@ -223,10 +223,24 @@ class Relation(entity.Entity):
     def get_dao(self, service):
         return RelationDao(service)
 
+    def clone(self):
+        entity = self.__class__()
+        entity.id = self.id
+        return entity
 
 class Objects(Relation):
     def get_dao(self, service):
         return ObjectsDao(service)
+
+    def clone(self):
+        entity = self.__class__()
+        entity.id = self.id
+        return entity
 class Subjects(Relation):
     def get_dao(self, service):
         return SubjectsDao(service)
+
+    def clone(self):
+        entity = self.__class__()
+        entity.id = self.id
+        return entity

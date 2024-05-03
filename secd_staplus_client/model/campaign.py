@@ -410,3 +410,8 @@ class Campaign(entity.Entity):
 
     def get_dao(self, service):
         return CampaignDao(service)
+
+    def clone(self):
+        entity = self.__class__()
+        entity.id = self.id
+        return entity

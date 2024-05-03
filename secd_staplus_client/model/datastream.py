@@ -175,3 +175,8 @@ class Datastream(datastream.Datastream):
 
     def get_dao(self, service):
         return DatastreamDao(service)
+
+    def clone(self):
+        entity = self.__class__()
+        entity.id = self.id
+        return entity

@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+import secd_staplus_client
 from frost_sta_client.model import thing
 
 from secd_staplus_client.dao.thing import ThingDao
@@ -101,3 +101,8 @@ class Thing(thing.Thing):
 
     def get_dao(self, service):
         return ThingDao(service)
+
+    def clone(self):
+        entity = self.__class__()
+        entity.id = self.id
+        return entity
