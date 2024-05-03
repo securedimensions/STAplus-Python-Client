@@ -11,6 +11,7 @@ This library requires Python 3.11 to better support parsing ISO datetime values 
 * Queries on entity lists
 * Query on single entity
 * MultiDatastreams
+* Cloning Entities
 
 ## API
 
@@ -187,3 +188,247 @@ service = staplus.STAplusService(url)
 datastream = service.datastreams().find(1).item()
 datastream_thing = datastream.get_thing().query().item()
 ```
+
+### Cloning an Entity
+When creating an Entity, mandatory entities can be provided either inline or by reference. To support the referencing of existing entities, the `clone()` function can be used. `clone()` returns a copy of the entity but only containing the `@iot.id`. This is important when preparing MQTT messages to publish observations.
+
+#### Example ObservationGroup with inline entities
+```JSON
+{
+  "Observations": [
+    {
+      "Datastream": {
+        "@iot.id": 1,
+        "description": "desc",
+        "name": "new name",
+        "observationType": "OM_Observation",
+        "observedArea": {
+          "coordinates": [11.509234, 48.110728],
+          "type": "Point"
+        },
+        "phenomenonTime": "2023-07-24T06:30:18+00:00/2023-09-14T05:40:25.292000+00:00",
+        "resultTime": "2023-07-24T06:30:18+00:00/2023-07-24T06:31:42+00:00",
+        "unitOfMeasurement": { "definition": "...", "name": "n", "symbol": "n" }
+      },
+      "FeatureOfInterest": {
+        "@iot.id": 77,
+        "description": "A rainy place",
+        "encodingType": "application/geo+json",
+        "feature": { "coordinates": [-6.22299, 53.306816], "type": "Point" },
+        "name": "Dublin",
+        "properties": {
+          "datastreams": [1, 2, 76, 2, 78, 77],
+          "multi_datastreams": [11]
+        }
+      },
+      "phenomenonTime": "2024-04-13T19:57:08+00:00",
+      "result": 19.111,
+      "resultTime": "2024-05-02T19:36:06+00:00"
+    },
+    {
+      "Datastream": {
+        "@iot.id": 2,
+        "description": "air relative humidity measured with the SmartCitizen Kit",
+        "name": "Relative Humidity",
+        "observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+        "observedArea": {
+          "coordinates": [11.509234, 48.110728],
+          "type": "Point"
+        },
+        "phenomenonTime": "2023-07-24T06:30:18+00:00/2023-07-24T06:31:42+00:00",
+        "resultTime": "2023-07-24T06:30:18+00:00/2023-07-24T06:31:42+00:00",
+        "unitOfMeasurement": {
+          "definition": "https://qudt.org/vocab/unit/PERCENT",
+          "name": "Percentage",
+          "symbol": "%"
+        }
+      },
+      "FeatureOfInterest": {
+        "@iot.id": 77,
+        "description": "A rainy place",
+        "encodingType": "application/geo+json",
+        "feature": { "coordinates": [-6.22299, 53.306816], "type": "Point" },
+        "name": "Dublin",
+        "properties": {
+          "datastreams": [1, 2, 76, 2, 78, 77],
+          "multi_datastreams": [11]
+        }
+      },
+      "phenomenonTime": "2024-04-13T19:57:08+00:00",
+      "result": 43.0,
+      "resultTime": "2024-05-02T19:36:06+00:00"
+    },
+    {
+      "Datastream": {
+        "@iot.id": 76,
+        "description": "Precipitation measured with the FT-0310 Weather Station",
+        "name": "Rain",
+        "observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+        "unitOfMeasurement": {
+          "definition": "https://qudt.org/vocab/unit/MilliM",
+          "name": "millimiter",
+          "symbol": "mm"
+        }
+      },
+      "FeatureOfInterest": {
+        "@iot.id": 77,
+        "description": "A rainy place",
+        "encodingType": "application/geo+json",
+        "feature": { "coordinates": [-6.22299, 53.306816], "type": "Point" },
+        "name": "Dublin",
+        "properties": {
+          "datastreams": [1, 2, 76, 2, 78, 77],
+          "multi_datastreams": [11]
+        }
+      },
+      "phenomenonTime": "2024-04-13T19:57:08+00:00",
+      "result": 87.0,
+      "resultTime": "2024-05-02T19:36:06+00:00"
+    },
+    {
+      "Datastream": {
+        "@iot.id": 77,
+        "description": "Wind direction measured with the FT-0310 Weather Station",
+        "name": "Wind direction",
+        "observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+        "unitOfMeasurement": {
+          "definition": "https://qudt.org/vocab/unit/DEG",
+          "name": "degree",
+          "symbol": "deg"
+        }
+      },
+      "FeatureOfInterest": {
+        "@iot.id": 77,
+        "description": "A rainy place",
+        "encodingType": "application/geo+json",
+        "feature": { "coordinates": [-6.22299, 53.306816], "type": "Point" },
+        "name": "Dublin",
+        "properties": {
+          "datastreams": [1, 2, 76, 2, 78, 77],
+          "multi_datastreams": [11]
+        }
+      },
+      "phenomenonTime": "2024-04-13T19:57:08+00:00",
+      "result": 241.0,
+      "resultTime": "2024-05-02T19:36:06+00:00"
+    },
+    {
+      "FeatureOfInterest": {
+        "@iot.id": 77,
+        "description": "A rainy place",
+        "encodingType": "application/geo+json",
+        "feature": { "coordinates": [-6.22299, 53.306816], "type": "Point" },
+        "name": "Dublin",
+        "properties": {
+          "datastreams": [1, 2, 76, 2, 78, 77],
+          "multi_datastreams": [11]
+        }
+      },
+      "MultiDatastream": {
+        "@iot.id": 11,
+        "ObservedProperties": [
+          {
+            "@iot.id": 105,
+            "definition": "http://vocab.nerc.ac.uk/standard_name/wind_speed/",
+            "description": "Wind speed",
+            "name": "wspeed"
+          },
+          {
+            "@iot.id": 106,
+            "definition": "http://vocab.nerc.ac.uk/standard_name/wind_gust_from_direction/",
+            "description": "Wind gust",
+            "name": "wgust"
+          }
+        ],
+        "description": "Wind speed average and gust measured with the FT-0310 Weather Station",
+        "multiObservationDataTypes": [
+          "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+          "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"
+        ],
+        "name": "Wind speed avg and gust",
+        "observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+        "unitOfMeasurements": [
+          {
+            "definition": "https://qudt.org/vocab/unit/M-PER-SEC",
+            "name": "Meters per second",
+            "symbol": "m/s"
+          },
+          {
+            "definition": "https://qudt.org/vocab/unit/M-PER-SEC",
+            "name": "Meters per second",
+            "symbol": "m/s"
+          }
+        ]
+      },
+      "phenomenonTime": "2024-04-13T19:57:08+00:00",
+      "result": [0.0, 0.0],
+      "resultTime": "2024-05-02T19:36:06+00:00"
+    }
+  ],
+  "Party": {
+    "@iot.id": "36fd7ca4-08bb-11ef-b156-a337e8ef4d15",
+    "displayName": "LJS",
+    "role": "individual"
+  },
+  "creationTime": "2024-05-02T19:36:06+00:00",
+  "description": " ",
+  "endTime": "2024-05-02T19:36:06+00:00",
+  "name": "OG 2024-05-02T19:36:06+00:00"
+}
+```
+
+This example with inline `Datastream` and `FeatureOfInterest` entities has the size of 6245 Bytes.
+
+#### Example ObservationGroup with referencing entities
+```JSON
+{
+  "Observations": [
+    {
+      "Datastream": { "@iot.id": 1 },
+      "FeatureOfInterest": { "@iot.id": 77 },
+      "phenomenonTime": "2024-04-13T19:57:08+00:00",
+      "result": 19.111,
+      "resultTime": "2024-05-03T09:48:33+00:00"
+    },
+    {
+      "Datastream": { "@iot.id": 2 },
+      "FeatureOfInterest": { "@iot.id": 77 },
+      "phenomenonTime": "2024-04-13T19:57:08+00:00",
+      "result": 43.0,
+      "resultTime": "2024-05-03T09:48:33+00:00"
+    },
+    {
+      "Datastream": { "@iot.id": 76 },
+      "FeatureOfInterest": { "@iot.id": 77 },
+      "phenomenonTime": "2024-04-13T19:57:08+00:00",
+      "result": 87.0,
+      "resultTime": "2024-05-03T09:48:33+00:00"
+    },
+    {
+      "Datastream": { "@iot.id": 77 },
+      "FeatureOfInterest": { "@iot.id": 77 },
+      "phenomenonTime": "2024-04-13T19:57:08+00:00",
+      "result": 241.0,
+      "resultTime": "2024-05-03T09:48:33+00:00"
+    },
+    {
+      "FeatureOfInterest": { "@iot.id": 77 },
+      "MultiDatastream": { "@iot.id": 11 },
+      "phenomenonTime": "2024-04-13T19:57:08+00:00",
+      "result": [0.0, 0.0],
+      "resultTime": "2024-05-03T09:48:33+00:00"
+    }
+  ],
+  "Party": {
+    "@iot.id": "4cd42a10-0932-11ef-919f-57f24e9b90e3",
+    "displayName": "LJS",
+    "role": "individual"
+  },
+  "creationTime": "2024-05-03T09:48:33+00:00",
+  "description": " ",
+  "endTime": "2024-05-03T09:48:33+00:00",
+  "name": "OG 2024-05-03T09:48:33+00:00"
+}
+```
+
+This example with referenced `Datastream` and `FeatureOfInterest` entities has the size of 1420 Bytes.
