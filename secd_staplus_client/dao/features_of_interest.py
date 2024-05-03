@@ -15,6 +15,7 @@
 from frost_sta_client.dao.features_of_interest import FeaturesOfInterestDao as STAFeaturesOfInterestDao
 from secd_staplus_client.dao.base import BaseDao as STAplusBaseDao
 from secd_staplus_client.query.query import Query
+from secd_staplus_client.model.ext.entity_type import EntityTypes
 
 class FeaturesOfInterestDao(STAFeaturesOfInterestDao):
     def __init__(self, service):
@@ -22,6 +23,10 @@ class FeaturesOfInterestDao(STAFeaturesOfInterestDao):
         A data access object for operations with the FeatureOfInterest entity
         """
         super().__init__(service)
+        entitytype = EntityTypes["FeatureOfInterest"]
+        self.entitytype = entitytype["singular"]
+        self.entitytype_plural = entitytype["plural"]
+        self.entity_class = entitytype["class"]
 
     def query(self):
         return Query(self.service, self.entitytype, self.entitytype_plural, self.entity_class, self.parent)
