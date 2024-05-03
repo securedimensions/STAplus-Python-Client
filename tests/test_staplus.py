@@ -93,8 +93,8 @@ class TestService(unittest.TestCase):
         ds.sensor = sensor
         self.service.create(ds)
 
-        ds_subject = STAplus.Observation( phenomenon_time='2016-01-07T02:00:00.000+00:00', result='0.15', feature_of_interest=munich, parameters={'relation': 'subject'}, datastream=ds)
-        ds_object = STAplus.Observation( phenomenon_time='2024-04-17T12:00:00.000+00:00', result='3.74', feature_of_interest=munich, parameters={'relation': 'object'}, datastream=ds)
+        ds_subject = STAplus.Observation( phenomenon_time='2016-01-07T02:00:00.000+00:00', result='0.15', feature_of_interest=munich, parameters={'relation': 'subject'}, datastream=ds.clone())
+        ds_object = STAplus.Observation( phenomenon_time='2024-04-17T12:00:00.000+00:00', result='3.74', feature_of_interest=munich, parameters={'relation': 'object'}, datastream=ds.clone())
         self.service.create(ds_subject)
         self.service.create(ds_object)
 
