@@ -1,5 +1,5 @@
 __title__ = 'STAplus API Python Client'
-__version__ = '0.1'
+__version__ = '0.2'
 __license__ = 'LGPL3'
 __author__ = 'Andreas Matheus'
 __copyright__ = 'Secure Dimensions'
