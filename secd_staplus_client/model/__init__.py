@@ -23,3 +23,4 @@ from secd_staplus_client.model import relation
 from secd_staplus_client.model import observation_group
 from secd_staplus_client.model import observation
 from secd_staplus_client.model import feature_of_interest
+from secd_staplus_client.model import location

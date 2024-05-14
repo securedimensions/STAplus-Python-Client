@@ -47,7 +47,7 @@ EntityTypes = {
     'Location': {
         'singular': 'Location',
         'plural': 'Locations',
-        'class': 'frost_sta_client.model.location.Location',
+        'class': 'secd_staplus_client.model.location.Location',
         'relations_list': ['Things', 'HistoricalLocations']
     },
     'Observation': {

@@ -257,9 +257,9 @@ class Party(entity.Entity):
             data['authId'] = self.auth_id
         if self.description is not None and self.description != '':
             data['description'] = self.description
-        if self.role is not None and self.role != {}:
+        if self.role is not None and self.role != '':
             data['role'] = self.role
-        if self.display_name is not None and self.display_name != {}:
+        if self.display_name is not None and self.display_name != '':
             data['displayName'] = self.display_name
         if self._datastreams is not None and len(self.datastreams.entities) > 0:
             data['Datastreams'] = self.datastreams.__getstate__()
