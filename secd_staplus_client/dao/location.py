@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from frost_sta_client.dao.location import LocationDao as STALocationDao
+from secd_staplus_client.dao.location import LocationDao as STALocationDao
 from secd_staplus_client.dao.base import BaseDao as STAplusBaseDao
 from secd_staplus_client.query.query import Query
 
