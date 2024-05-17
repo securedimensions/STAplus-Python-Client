@@ -41,6 +41,7 @@ from frost_sta_client.model.historical_location import HistoricalLocation
 
 
 import jsonpickle
+import demjson3
 
 jsonpickle.load_backend('demjson3', 'encode', 'decode', 'JSONDecodeError')
 jsonpickle.set_preferred_backend('demjson3')
