@@ -1,0 +1,13 @@
+frost-sta-client@git+https://github.com/securedimensions/STA-Python-Client@master#egg=staplus_client
+oauth2-client@git+https://github.com/securedimensions/OAuth2Client.git
+jsonpickle
+demjson3
+requests
+furl
+geojson
+jsonpatch
+python-dateutil
+numpy
+testcontainers
+sqlalchemy
+psycopg2
