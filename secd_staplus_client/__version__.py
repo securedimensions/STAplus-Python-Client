@@ -1,8 +1,0 @@
-__title__ = 'STAplus API Python Client'
-__version__ = '0.2'
-__license__ = 'LGPL3'
-__author__ = 'Andreas Matheus'
-__copyright__ = 'Secure Dimensions'
-__contact__ = 'am@secure-dimensions.de'
-__url__ = 'https://github.com/securedimensions/STAplus-Python-Client'
-__description__ = 'A client library to facilitate interaction with a STAplus SensorThingsAPI Server'
