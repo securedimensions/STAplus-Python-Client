@@ -8,6 +8,3 @@ geojson
 jsonpatch
 python-dateutil
 numpy
-testcontainers
-sqlalchemy
-psycopg2

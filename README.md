@@ -17,6 +17,9 @@ This library requires Python 3.11 or better to support parsing ISO datetime valu
 * Fetching entities relative to an entity (using many-association)
 * Fetching one single entity relative to an entity (using one-association)
 
+## Installation via PyPi
+
+
 ## Limitations
 This implementation has the following limitations for the Entity `Location` and `FeatureOfInterest`:
 

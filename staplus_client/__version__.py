@@ -1,1 +1,8 @@
-../__version__.py
+__title__ = 'staplus_client'
+__version__ = '0.3.2'
+__license__ = 'LGPL3'
+__author__ = 'Andreas Matheus'
+__copyright__ = 'Secure Dimensions'
+__contact__ = 'andreas.matheus@secure-dimensions.de'
+__url__ = 'https://github.com/securedimensions/STAplus-Python-Client'
+__description__ = 'A client library to facilitate interaction with a STAplus Server'
