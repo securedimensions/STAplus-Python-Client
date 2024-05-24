@@ -22,6 +22,6 @@ setup(
     packages=find_packages(exclude="tests"),
     #data_files=[('.',['__version__.py'])],
     install_requires=['demjson3>=3.0.5', 'furl>=2.1.3', 'geojson>=2.5.0', 'jsonpickle>=2.0.0',
-                      'requests>=2.26.0', 'jsonpatch', 'python-dateutil', 'pillow', 'sta-client'],
+                      'requests>=2.26.0', 'jsonpatch', 'python-dateutil', 'pillow', 'sd-frost-sta-client'],
     keywords=['ogc', 'staplus', 'sensorthingsapi', 'IoT']
 )
