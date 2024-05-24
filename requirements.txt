@@ -1,5 +1,5 @@
-frost-sta-client@git+https://github.com/securedimensions/STA-Python-Client@master#egg=frost_sta_client
-oauth2-client@git+https://github.com/securedimensions/OAuth2Client.git
+sd-frost-sta-client
+sd-oauth2-client
 jsonpickle
 demjson3
 requests

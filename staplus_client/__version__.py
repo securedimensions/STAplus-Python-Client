@@ -1,4 +1,4 @@
-__title__ = 'staplus_client'
+__title__ = 'staplus-client'
 __version__ = '0.3.2'
 __license__ = 'LGPL3'
 __author__ = 'Andreas Matheus'
