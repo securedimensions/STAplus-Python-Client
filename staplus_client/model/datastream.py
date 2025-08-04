@@ -41,7 +41,7 @@ class Datastream(datastream.Datastream):
                  **kwargs):
         super().__init__(name, description, observation_type, unit_of_measurement,
                          observed_area, properties, phenomenon_time, result_time, thing,
-                         sensor, observations, observed_property, **kwargs)
+                         sensor, observed_property, observations, **kwargs)
         self.campaigns = campaigns
         self.party = party
         self.license = license
