@@ -1,5 +1,5 @@
 __title__ = 'staplus-client'
-__version__ = '0.3.3'
+__version__ = '0.3.4'
 __license__ = 'LGPL3'
 __author__ = 'Andreas Matheus'
 __copyright__ = 'Secure Dimensions'
