@@ -1,4 +1,4 @@
-sd-frost-sta-client
+sd-frost-sta-client==1.1.46
 sd-oauth2-client
 jsonpickle
 demjson3
