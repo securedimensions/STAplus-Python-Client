@@ -15,6 +15,7 @@
 
 from staplus_client import utils
 from staplus_client.model import entity, campaign, datastream, multi_datastream, observation_group
+from staplus_client.model.ext.datatypes import check_uri
 from staplus_client.model.ext import entity_list, entity_type
 from staplus_client.dao.license import LicenseDao
 
@@ -86,12 +87,7 @@ class License(entity.Entity):
 
     @definition.setter
     def definition(self, value):
-        if value is None:
-            self._definition = None
-            return
-        if not isinstance(value, str):
-            raise ValueError('definition should be of type str!')
-        self._definition = value
+        self._definition = check_uri(value, 'definition')
 
     @property
     def logo(self):
@@ -100,7 +96,7 @@ class License(entity.Entity):
     @logo.setter
     def logo(self, value):
         if value is None:
-            self._value = None
+            self._logo = None
             return
         if not isinstance(value, str):
             raise ValueError('logo should be of type str!')
@@ -245,6 +241,8 @@ class License(entity.Entity):
 
     def __getstate__(self):
         data = super().__getstate__()
+        if self.name is not None and self.name != '':
+            data['name'] = self.name
         if self.description is not None and self.description != '':
             data['description'] = self.description
         if self.definition is not None and self.definition != '':

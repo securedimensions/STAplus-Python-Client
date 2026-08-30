@@ -16,8 +16,9 @@
 import logging
 import requests
 
+import staplus_client
 from staplus_client.service.staplusservice import STAplusService
-from staplus_client.model.entity import Entity
+from frost_sta_client.model.entity import Entity as FrostEntity
 from frost_sta_client.model.ext import entity_list
 
 class EntityList(entity_list.EntityList):
@@ -68,8 +69,13 @@ class EntityList(entity_list.EntityList):
         for entity in self.entities:
             entity.set_service(service)
 
+    @property
+    def entities(self):
+        return self._entities
+
+    @entities.setter
     def entities(self, values):
-        if isinstance(values, list) and all(isinstance(v, Entity) for v in values):
+        if isinstance(values, list) and all(isinstance(v, FrostEntity) for v in values):
             self._entities = values
             return
         raise ValueError('entities should be a list of STAplus entities')

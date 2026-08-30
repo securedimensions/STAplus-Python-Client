@@ -16,6 +16,7 @@ from datetime import datetime
 
 from frost_sta_client.utils import check_datetime
 from staplus_client.utils import transform_json_to_entity_list
+from staplus_client.model.ext.datatypes import check_url
 from staplus_client.model import entity, datastream, multi_datastream, license, observation_group, party
 from staplus_client.model.ext import entity_list, entity_type
 from staplus_client.dao.campaign import CampaignDao
@@ -60,9 +61,9 @@ class Campaign(entity.Entity):
     def __new__(cls, *args, **kwargs):
         new_campaign = super().__new__(cls)
         attributes = {'_id': None, '_name': '', '_description': '', '_classification': None, '_terms_of_use': '',
-                      '_privacy_statement': None, '_creation_time': '', '_start_time': None, '_end_start': None,
+                      '_privacy_policy': None, '_creation_time': '', '_start_time': None, '_end_time': None,
                       '_url': None, '_properties': None,
-                      '_datastreams': None, '_multi_datastreams': None, 'observation_groups': None,
+                      '_datastreams': None, '_multi_datastreams': None, '_observation_groups': None,
                       '_party': None, '_license': None,
                       '_self_link': '', '_service': None}
         for key, value in attributes.items():
@@ -173,12 +174,7 @@ class Campaign(entity.Entity):
 
     @url.setter
     def url(self, value):
-        if value is None:
-            self._url = None
-            return
-        if not isinstance(value, str):
-            raise ValueError('url should be of type str!')
-        self._url = value
+        self._url = check_url(value, 'url')
 
     @property
     def properties(self):
@@ -249,7 +245,7 @@ class Campaign(entity.Entity):
             self._observation_groups = None
             return
         if isinstance(values, list) and all(isinstance(gs, observation_group.ObservationGroup) for gs in values):
-            entity_class = entity_type.EntityTypes['ObservationGroups']['class']
+            entity_class = entity_type.EntityTypes['ObservationGroup']['class']
             self._observation_groups = entity_list.EntityList(entity_class=entity_class, entities=values)
             return
         if not isinstance(values, entity_list.EntityList) or \
@@ -289,7 +285,7 @@ class Campaign(entity.Entity):
             return
         raise ValueError('license should be of type License!')
 
-    def get_licence(self):
+    def get_license(self):
         result = self.service.license()
         result.parent = self
         return result
@@ -358,7 +354,7 @@ class Campaign(entity.Entity):
             data['endTime'] = datetime.fromisoformat(self.end_time)
         if self.url is not None and self.url != '':
             data['url'] = self.url
-        if self.properties is not None and self.terms_of_use != {}:
+        if self.properties is not None and self.properties != {}:
             data['properties'] = self.properties
         if self._datastreams is not None and len(self.datastreams.entities) > 0:
             data['Datastreams'] = self.datastreams.__getstate__()

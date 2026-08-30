@@ -60,7 +60,7 @@ class ObservationGroup(entity.Entity):
     def __new__(cls, *args, **kwargs):
         new_group = super().__new__(cls)
         attributes = {'_id': None, '_name': '', '_description': '', '_purpose': None, '_terms_of_use': '',
-                      '_privacy_policy': None, '_creation_time': '', '_end_start': None,
+                      '_privacy_policy': None, '_creation_time': '', '_end_time': None,
                       '_properties': None, '_data_quality': None,
                       '_observations': None, '_relations': None, '_campaigns': None,
                       '_party': None, '_license': None,

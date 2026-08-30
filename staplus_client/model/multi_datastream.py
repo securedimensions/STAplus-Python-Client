@@ -16,10 +16,11 @@
 from frost_sta_client.model import multi_datastream
 from staplus_client import utils
 from staplus_client.model.ext import entity_list, entity_type
+from staplus_client.model.ext.cell_attribute import CellAttribute
 from staplus_client.dao.multi_datastream import MultiDatastreamDao
 from staplus_client.model import license, campaign, party
 
-class MultiDatastream(multi_datastream.MultiDatastream):
+class MultiDatastream(CellAttribute, multi_datastream.MultiDatastream):
     def __init__(self,
                  name='',
                  description='',
@@ -37,6 +38,7 @@ class MultiDatastream(multi_datastream.MultiDatastream):
                  campaigns=None,
                  party=None,
                  license=None,
+                 cell=None,
                  **kwargs):
         super().__init__(name, description, properties, unit_of_measurements, observation_type,
                          multi_observation_data_types, observed_area, phenomenon_time, result_time,
@@ -44,12 +46,13 @@ class MultiDatastream(multi_datastream.MultiDatastream):
         self.party = party
         self.license = license
         self.campaigns = campaigns
+        self.cell = cell
 
     def __new__(cls, *args, **kwargs):
-        new_mds = super().__new__(cls, args, kwargs)
-        attributes = dict( _campaigns=None, _party=None, _license=None, _self_link='', _service=None)
+        new_mds = super().__new__(cls, *args, **kwargs)
+        attributes = dict(_campaigns=None, _party=None, _license=None, _cell=None, _self_link='', _service=None)
         for key, value in attributes.items():
-            new_mds.__dict__[key] = value
+            new_mds.__dict__.setdefault(key, value)
         return new_mds
 
     @property
@@ -125,6 +128,8 @@ class MultiDatastream(multi_datastream.MultiDatastream):
             self.license.set_service(service)
         if self.campaigns is not None:
             self.campaigns.set_service(service)
+        if self.cell is not None and hasattr(self.cell, 'set_service'):
+            self.cell.set_service(service)
 
     def __getstate__(self):
         data = super().__getstate__()
@@ -134,7 +139,6 @@ class MultiDatastream(multi_datastream.MultiDatastream):
             data['License'] = self.license
         if self._campaigns is not None and len(self.campaigns.entities) > 0:
             data['Campaigns'] = self.campaigns.__getstate__()
-
         return data
 
     def __setstate__(self, state):

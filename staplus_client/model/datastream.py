@@ -16,11 +16,12 @@
 from frost_sta_client.model import datastream
 from staplus_client import utils
 from staplus_client.model.ext import entity_list, entity_type
+from staplus_client.model.ext.cell_attribute import CellAttribute
 from staplus_client.dao.datastream import DatastreamDao
 from staplus_client.model import license, party, campaign
 
 
-class Datastream(datastream.Datastream):
+class Datastream(CellAttribute, datastream.Datastream):
 
     def __init__(self,
                  name='',
@@ -38,6 +39,7 @@ class Datastream(datastream.Datastream):
                  campaigns=None,
                  party=None,
                  license=None,
+                 cell=None,
                  **kwargs):
         super().__init__(name, description, observation_type, unit_of_measurement,
                          observed_area, properties, phenomenon_time, result_time, thing,
@@ -45,12 +47,13 @@ class Datastream(datastream.Datastream):
         self.campaigns = campaigns
         self.party = party
         self.license = license
+        self.cell = cell
 
     def __new__(cls, *args, **kwargs):
-        new_datastream = super().__new__(cls, args, kwargs)
-        attributes = dict(_campaigns=None, _party=None, _license=None, _self_link='', _service=None)
+        new_datastream = super().__new__(cls, *args, **kwargs)
+        attributes = dict(_campaigns=None, _party=None, _license=None, _cell=None, _self_link='', _service=None)
         for key, value in attributes.items():
-            new_datastream.__dict__[key] = value
+            new_datastream.__dict__.setdefault(key, value)
         return new_datastream
 
     @property
@@ -99,7 +102,7 @@ class Datastream(datastream.Datastream):
         result = self.service.observed_property()
         result.parent = self
         return result
-
+    
     @property
     def campaigns(self):
         return self._campaigns
@@ -109,7 +112,7 @@ class Datastream(datastream.Datastream):
         if values is None:
             self._campaigns = None
             return
-        if isinstance(values, list) and all(isinstance(ps, campaign.Campaign) for ps in values):
+        if isinstance(values, list) and all(isinstance(cs, campaign.Campaign) for cs in values):
             entity_class = entity_type.EntityTypes['Campaign']['class']
             self._campaigns = entity_list.EntityList(entity_class=entity_class, entities=values)
             return
@@ -131,12 +134,14 @@ class Datastream(datastream.Datastream):
             self.license.set_service(service)
         if self.campaigns is not None:
             self.campaigns.set_service(service)
+        if self.cell is not None and hasattr(self.cell, 'set_service'):
+            self.cell.set_service(service)
 
     def __getstate__(self):
         data = super().__getstate__()
-        if self.party is not None:
+        if self._party is not None:
             data['Party'] = self.party
-        if self.license is not None:
+        if self._license is not None:
             data['License'] = self.license
         if self._campaigns is not None and len(self.campaigns.entities) > 0:
             data['Campaigns'] = self.campaigns.__getstate__()

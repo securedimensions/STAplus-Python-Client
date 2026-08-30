@@ -18,7 +18,14 @@ from staplus_client import dao
 from staplus_client import service
 from staplus_client import query
 
-from staplus_client.model.party import Party
+from staplus_client.model.party import Party, PARTY_ROLE_CODES, PARTY_ROLE_INDIVIDUAL, PARTY_ROLE_INSTITUTIONAL, PARTY_ROLE_SYSTEM
+from staplus_client.model.ext.datatypes import (
+    ENCODING_TYPES,
+    ENCODING_TYPE_GEOJSON,
+    ENCODING_TYPE_GEOJSON_VND,
+    ENCODING_TYPE_JSON_FG,
+    ENCODING_TYPE_WKT,
+)
 from staplus_client.model.license import License
 from staplus_client.model.thing import Thing
 from staplus_client.model.datastream import Datastream
@@ -35,6 +42,7 @@ from staplus_client.model.historical_location import HistoricalLocation
 from staplus_client.model.ext.entity_type import EntityTypes
 from staplus_client.model.ext.unitofmeasurement import UnitOfMeasurement
 from staplus_client.service.staplusservice import STAplusService
+
 
 import jsonpickle
 import demjson3
