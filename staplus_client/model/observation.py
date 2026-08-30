@@ -18,11 +18,12 @@ from datetime import datetime
 from frost_sta_client.model import observation
 from staplus_client import utils
 from staplus_client.model.ext import entity_list, entity_type
+from staplus_client.model.ext.cell_attribute import CellAttribute
 from staplus_client.dao.observation import ObservationDao, SubjectDao, ObjectDao
 from staplus_client.model import observation_group, relation
 
 
-class Observation(observation.Observation):
+class Observation(CellAttribute, observation.Observation):
 
     def __init__(self,
                  phenomenon_time=None,
@@ -37,18 +38,20 @@ class Observation(observation.Observation):
                  observation_groups=None,
                  subjects=None,
                  objects=None,
+                 cell=None,
                  **kwargs):
         super().__init__(phenomenon_time, result, result_time, result_quality, valid_time,
                          parameters, datastream, multi_datastream, feature_of_interest, **kwargs)
         self.observation_groups = observation_groups
         self.subjects = subjects
         self.objects = objects
+        self.cell = cell
 
     def __new__(cls, *args, **kwargs):
-        new_observation = super().__new__(cls, args, kwargs)
-        attributes = {'_observation_groups': None, '_subjects': None, '_objects': None}
+        new_observation = super().__new__(cls, *args, **kwargs)
+        attributes = {'_observation_groups': None, '_subjects': None, '_objects': None, '_cell': None}
         for key, value in attributes.items():
-            new_observation.__dict__[key] = value
+            new_observation.__dict__.setdefault(key, value)
         return new_observation
 
     @property
@@ -143,6 +146,8 @@ class Observation(observation.Observation):
             self.subjects.set_service(service)
         if self.objects is not None:
             self.objects.set_service(service)
+        if self.cell is not None and hasattr(self.cell, 'set_service'):
+            self.cell.set_service(service)
 
     def __getstate__(self):
         data = super().__getstate__()
@@ -200,6 +205,7 @@ class Observation(observation.Observation):
         entity = self.__class__()
         entity.id = self.id
         return entity
+    
 class Object(Observation):
     def get_dao(self, service):
         return ObjectDao(service)
@@ -208,6 +214,7 @@ class Object(Observation):
         entity = self.__class__()
         entity.id = self.id
         return entity
+    
 class Subject(Observation):
     def get_dao(self, service):
         return SubjectDao(service)

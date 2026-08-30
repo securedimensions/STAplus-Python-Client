@@ -88,6 +88,11 @@ class Thing(thing.Thing):
             self.party = party.Party()
             self.party.__setstate__(state["Party"])
 
+    @property
+    def locations(self):
+        return self._locations
+
+    @locations.setter
     def locations(self, values):
         if values is None:
             self._locations = None

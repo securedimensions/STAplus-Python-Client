@@ -18,13 +18,13 @@ EntityTypes = {
         'singular': 'Datastream',
         'plural': 'Datastreams',
         'class': 'staplus_client.model.datastream.Datastream',
-        'relations_list': ['Sensor', 'Thing', 'ObservedProperty', 'Observations', 'Party', 'License', 'Campaign']
+        'relations_list': ['Sensor', 'Thing', 'ObservedProperty', 'Observations', 'Party', 'License', 'Campaigns']
     },
     'MultiDatastream': {
         'singular': 'MultiDatastream',
         'plural': 'MultiDatastreams',
         'class': 'staplus_client.model.multi_datastream.MultiDatastream',
-        'relations_list': ['Sensor', 'Thing', 'ObservedProperties', 'Observations', 'Party', 'License', 'Campaign']
+        'relations_list': ['Sensor', 'Thing', 'ObservedProperties', 'Observations', 'Party', 'License', 'Campaigns']
     },
     'FeatureOfInterest': {
         'singular': 'FeatureOfInterest',
@@ -54,7 +54,7 @@ EntityTypes = {
         'singular': 'Observation',
         'plural': 'Observations',
         'class': 'staplus_client.model.observation.Observation',
-        'relations_list': ['FeatureOfInterest', 'Datastream', 'MultiDatastream', 'Subjects', 'Objects']
+        'relations_list': ['FeatureOfInterest', 'Datastream', 'MultiDatastream', 'Subjects', 'Objects', 'ObservationGroups']
     },
     'Thing': {
         'singular': 'Thing',
@@ -129,14 +129,24 @@ EntityTypes = {
         'plural': 'Relations',
         'class': 'staplus_client.model.relation.Relation',
         'relations_list': ['Subject', 'Object', 'ObservationGroups']
-    }
+    },
 }
 
 list_for_class = {}
-for key, entity_type in EntityTypes.items():
-    list_for_class[entity_type["class"]] = entity_type["plural"]
+
+
+def rebuild_class_index():
+    list_for_class.clear()
+    for entity_type in EntityTypes.values():
+        list_for_class[entity_type["class"]] = entity_type["plural"]
+
+
+rebuild_class_index()
 
 
 def get_list_for_class(clazz):
-    clazz_name = clazz.__module__ + "." + clazz.__name__
-    return list_for_class[clazz_name]
+    for base in clazz.__mro__:
+        clazz_name = base.__module__ + "." + base.__name__
+        if clazz_name in list_for_class:
+            return list_for_class[clazz_name]
+    raise KeyError(clazz.__module__ + "." + clazz.__name__)

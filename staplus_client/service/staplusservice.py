@@ -36,8 +36,8 @@ from staplus_client.dao import sensor
 import staplus_client.model.ext.entity_type as staplus_entity_type
 
 class STAplusService(sensorthingsservice.SensorThingsService):
-    def __init__(self, url, auth_handler=None):
-        super().__init__(url, auth_handler)
+    def __init__(self, url, auth_handler=None, proxies=None, **kwargs):
+        super().__init__(url, auth_handler=auth_handler, proxies=proxies)
 
     def create(self, entity):
         return entity.get_dao(self).create(entity)
@@ -66,9 +66,10 @@ class STAplusService(sensorthingsservice.SensorThingsService):
 
     def execute(self, method, url, **kwargs):
         if self.auth_handler is not None:
-            response = requests.request(method, url, auth=self.auth_handler.add_auth_header(), **kwargs)
+            response = requests.request(method, url, proxies=self.proxies,
+                                        auth=self.auth_handler.add_auth_header(), **kwargs)
         else:
-            response = requests.request(method, url, **kwargs)
+            response = requests.request(method, url, proxies=self.proxies, **kwargs)
         try:
             response.raise_for_status()
         except requests.exceptions.HTTPError as e:

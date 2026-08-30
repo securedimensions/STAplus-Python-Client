@@ -17,6 +17,11 @@ from frost_sta_client.model import entity
 from staplus_client.service.staplusservice import STAplusService
 
 class Entity(entity.Entity):
+    @property
+    def service(self):
+        return self._service
+
+    @service.setter
     def service(self, value):
         if value is None or isinstance(value, STAplusService):
             self._service = value

@@ -19,8 +19,19 @@ from staplus_client.model import datastream, multi_datastream, thing, observatio
 from staplus_client.model.ext import entity_list, entity_type
 from staplus_client.dao.party import PartyDao
 
+# STAplusV10.xml PartyRoleCode literals
+PARTY_ROLE_INDIVIDUAL = 'individual'
+PARTY_ROLE_INSTITUTIONAL = 'institutional'
+PARTY_ROLE_SYSTEM = 'system'
+PARTY_ROLE_CODES = (PARTY_ROLE_INDIVIDUAL, PARTY_ROLE_INSTITUTIONAL, PARTY_ROLE_SYSTEM)
+
 
 class Party(entity.Entity):
+
+    ROLE_INDIVIDUAL = PARTY_ROLE_INDIVIDUAL
+    ROLE_INSTITUTIONAL = PARTY_ROLE_INSTITUTIONAL
+    ROLE_SYSTEM = PARTY_ROLE_SYSTEM
+    ROLE_CODES = PARTY_ROLE_CODES
 
     def __init__(self,
                  description=None,
@@ -86,11 +97,13 @@ class Party(entity.Entity):
 
     @role.setter
     def role(self, value):
-        if value is None:
+        if value is None or value == '':
             self._role = None
             return
         if not isinstance(value, str):
             raise ValueError('role should be of type str!')
+        if value not in PARTY_ROLE_CODES:
+            raise ValueError('role should be a PartyRoleCode: individual, institutional, or system!')
         self._role = value
 
     @property
@@ -139,13 +152,13 @@ class Party(entity.Entity):
             self._campaigns = None
             return
         if isinstance(values, list) and all(isinstance(t, campaign.Campaign) for t in values):
-            entity_class = entity_type.EntityTypes['CampaignThing']['class']
+            entity_class = entity_type.EntityTypes['Campaign']['class']
             self._campaigns = entity_list.EntityList(entity_class=entity_class, entities=values)
             return
         if not isinstance(values, entity_list.EntityList) or \
                 any((not isinstance(t, campaign.Campaign)) for t in values.entities):
             raise ValueError('campaigns should be a list of Campaign')
-        self._things = values
+        self._campaigns = values
 
     def get_campaigns(self):
         result = self.service.campaigns()
@@ -226,6 +239,8 @@ class Party(entity.Entity):
             self.datastreams.set_service(service)
         if self.multi_datastreams is not None:
             self.multi_datastreams.set_service(service)
+        if self.things is not None:
+            self.things.set_service(service)
         if self.campaigns is not None:
             self.campaigns.set_service(service)
         if self.observation_groups is not None:

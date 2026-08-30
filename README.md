@@ -1,6 +1,6 @@
 # OGC STAplus (SensorThings) API Python Client
 
-This STAplus Python Client implements the [STAplus](https://docs.ogc.org/is/22-022r1/22-022r1.html) API. The aim is to simplify development of STAplus and SensorThings enabled client applications.
+This STAplus Python Client implements the STAplus 1.0 Corrigendum (not published yet) on [STAplus](https://docs.ogc.org/is/22-022r1/22-022r1.html) API. The aim is to simplify development of STAplus and SensorThings enabled client applications.
 
 **_NOTE:_** This implementation is an extension to the [FROST API Python Client](https://github.com/FraunhoferIOSB/FROST-Python-Client). To have better control over bug fixing and improvements, this implementation is actually based on a fork of the FROST API Python Client, hosted on a Secure Dimensions Github repository: [STA Python Client](https://github.com/securedimensions/STA-Python-Client).
 
@@ -19,6 +19,21 @@ This library requires Python 3.11 or better to support parsing ISO datetime valu
 
 ## Installation via PyPi
 Installation via pip: `pip install staplus-client`
+
+## Combined with STA-DGGS
+
+The STAplus `Cell` entity lives in the [STA-DGGS Python Client](https://github.com/securedimensions/STA-DGGS-Python-Client). A client that needs both STAplus (Party, License, Campaign, …) and Cell uses `compose()`. That returns one service whose Datastream, MultiDatastream, and Observation classes carry both models. Install `sta-dggs-client` in addition to `staplus-client`. `compose()` accepts the same constructor arguments as STA-Python-Client (`url`, `auth_handler`, `proxies`).
+
+```python
+import staplus_client as plus
+import sta_dggs_client as dggs
+service = dggs.compose(url, auth_handler=auth)
+ds = plus.Datastream(name='Temperature', description='temp',
+                     party=party, cell=cell)
+mds = plus.MultiDatastream(name='Air quality', description='multi',
+                           party=party, cell=cell)
+obs = plus.Observation(result=21.5, cell=cell)
+```
 
 ## Limitations
 This implementation has the following limitations for the Entity `Location` and `FeatureOfInterest`:

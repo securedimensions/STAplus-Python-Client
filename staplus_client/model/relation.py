@@ -15,6 +15,7 @@
 
 from staplus_client import utils
 from staplus_client.model import entity, observation_group, observation
+from staplus_client.model.ext.datatypes import check_uri
 from staplus_client.model.ext import entity_list, entity_type
 from staplus_client.dao.relation import RelationDao, SubjectsDao, ObjectsDao
 
@@ -37,7 +38,8 @@ class Relation(entity.Entity):
         self.role = role
         self.external_resource = external_resource
         self.properties = properties
-        self.subject = subject
+        if subject is not None:
+            self.subject = subject
         self.object = object
         self.observation_groups = observation_groups
 
@@ -70,12 +72,7 @@ class Relation(entity.Entity):
 
     @role.setter
     def role(self, value):
-        if value is None:
-            self._role = None
-            return
-        if not isinstance(value, str):
-            raise ValueError('role should be of type str!')
-        self._role = value
+        self._role = check_uri(value, 'role')
 
     @property
     def external_resource(self):
@@ -83,12 +80,7 @@ class Relation(entity.Entity):
 
     @external_resource.setter
     def external_resource(self, value):
-        if value is None:
-            self._external_resource = None
-            return
-        if not isinstance(value, str):
-            raise ValueError('externalObject should be of type str!')
-        self._external_resource = value
+        self._external_resource = check_uri(value, 'externalResource')
 
     @property
     def properties(self):
@@ -109,11 +101,8 @@ class Relation(entity.Entity):
 
     @subject.setter
     def subject(self, value):
-        if value is None:
-            self._subject = None
-            return
         if not isinstance(value, observation.Observation):
-            raise ValueError('subject should be of type Observation!')
+            raise ValueError('subject is mandatory and should be of type Observation!')
         self._subject = value
 
     def get_subject(self):
@@ -181,6 +170,8 @@ class Relation(entity.Entity):
             return False
         if self.external_resource != other.external_resource:
             return False
+        if self.properties != other.properties:
+            return False
 
         return True
 
@@ -197,7 +188,7 @@ class Relation(entity.Entity):
             data['externalResource'] = self.external_resource
         if self.properties is not None and self.properties != {}:
             data['properties'] = self.properties
-        if self.subject is not None and self.subject != {}:
+        if self.subject is not None:
             data['Subject'] = self.subject
         if self.object is not None and self.object != {}:
             data['Object'] = self.object
@@ -211,8 +202,22 @@ class Relation(entity.Entity):
         self.description = state.get("description", None)
         self.role = state.get("role", None)
         self.external_resource = state.get("externalResource", None)
-        self.subject = state.get("Subject", None)
-        self.object = state.get("Object", None)
+        self.properties = state.get("properties", None)
+
+        if state.get("Subject", None) is not None:
+            subject_state = state["Subject"]
+            if isinstance(subject_state, observation.Observation):
+                self.subject = subject_state
+            else:
+                self.subject = observation.Observation()
+                self.subject.__setstate__(subject_state)
+        if state.get("Object", None) is not None:
+            object_state = state["Object"]
+            if isinstance(object_state, observation.Observation):
+                self.object = object_state
+            else:
+                self.object = observation.Observation()
+                self.object.__setstate__(object_state)
 
         if state.get("ObservationGroups", None) is not None and isinstance(state["ObservationGroups"], list):
             entity_class = entity_type.EntityTypes['ObservationGroup']['class']
